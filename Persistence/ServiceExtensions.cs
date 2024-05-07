@@ -8,14 +8,15 @@ namespace Persistence
 {
     public static class ServiceExtensions
     {
-        public static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration)
+        public static void AddPersistence(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<DataContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("Database")));
 
-            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IDataContext>(sp =>
+            sp.GetRequiredService<DataContext>());
 
-            return services;
+            services.AddScoped<IUserRepository, UserRepository>();
         }
     }
 }

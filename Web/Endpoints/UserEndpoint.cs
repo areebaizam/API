@@ -1,6 +1,5 @@
-﻿using Application.IRepositories;
-using Persistence;
-using Persistence.Repositories;
+﻿using Application.Features.User;
+using MediatR;
 
 namespace Web.Endpoints
 {
@@ -13,13 +12,15 @@ namespace Web.Endpoints
             group.MapGet("", GetUsersAsync).WithName("GetAllUsers").WithOpenApi();
         }
 
-        static async Task<IResult> GetUsersAsync(DataContext db,CancellationToken cancellationToken)
+        static async Task<IResult> GetUsersAsync(ISender sender, CancellationToken cancellationToken)
         {
-            IUserRepository _repository = new UserRepository(db);
-            return TypedResults.Ok(await _repository.GetAllAsync(cancellationToken));
+            var response = await sender.Send(new GetUsersQuery(), cancellationToken);
+            //IUserRepository _repository = new UserRepository(db);
+            return TypedResults.Ok(response);
             //return TypedResults.Ok(await db.Users.ToArrayAsync());
         }
 
+        
         //static async Task<IResult> GetUserAsync(int id, DataContext db)
         //{
         //    return await db.Users.FindAsync(id)
