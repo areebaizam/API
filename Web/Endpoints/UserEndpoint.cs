@@ -1,5 +1,6 @@
-﻿using Application.Features.User;
+﻿using Application.Features.UserFeatures;
 using MediatR;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Web.Endpoints
 {
@@ -9,15 +10,27 @@ namespace Web.Endpoints
         {
             //Base URL
             var group = app.MapGroup("api/user");
-            group.MapGet("", GetUsersAsync).WithName("GetAllUsers").WithOpenApi();
+            group.MapGet("", GetAsync).WithName("GetAllUsers").WithOpenApi();
+            group.MapGet("{id}", GetByIdAsync).WithName("GetUserById").WithOpenApi();
+            group.MapPost("", PostByIdAsync).WithName("PostUserById").WithOpenApi();
         }
 
-        static async Task<IResult> GetUsersAsync(ISender sender, CancellationToken cancellationToken)
+        static async Task<Results<Ok<IEnumerable<GetUserResponse>>, NoContent>> GetAsync(ISender sender, CancellationToken cancellationToken)
         {
             var response = await sender.Send(new GetUsersQuery(), cancellationToken);
-            //IUserRepository _repository = new UserRepository(db);
-            return TypedResults.Ok(response);
-            //return TypedResults.Ok(await db.Users.ToArrayAsync());
+            return response.Count() > 0 ? TypedResults.Ok(response) : TypedResults.NoContent();
+        } 
+        
+        static async Task<Results<Ok<GetUserResponse>, NoContent>> GetByIdAsync(Guid id, ISender sender, CancellationToken cancellationToken)
+        {
+            var response = await sender.Send(new GetUserByIdQuery(new GetUserRequest(id)), cancellationToken);
+            return response is GetUserResponse? TypedResults.Ok(response):TypedResults.NoContent();
+        } 
+        
+        static async Task<Results<Ok<GetUserResponse>, NoContent>> PostByIdAsync(GetUserRequest request,ISender sender, CancellationToken cancellationToken)
+        {
+            var response = await sender.Send(new GetUserByIdQuery(request), cancellationToken);
+            return response is GetUserResponse ? TypedResults.Ok(response) : TypedResults.NoContent();
         }
 
         

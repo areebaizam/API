@@ -3,7 +3,7 @@ namespace Application.IRepositories
 {
     public interface IRepository<TEntity, TEntityId> 
         where TEntity : Entity<TEntityId> 
-        where TEntityId : class
+        where TEntityId : struct
     {
         Task<List<TEntity>> GetAllAsync(CancellationToken cancellationToken);
         Task<TEntity?> GetAsync(TEntityId id, CancellationToken cancellationToken);

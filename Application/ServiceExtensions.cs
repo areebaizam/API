@@ -9,7 +9,7 @@ namespace Application
     {
         public static void AddApplication(this IServiceCollection services)
         {
-            //services.AddAutoMapper(Assembly.GetExecutingAssembly());
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddMediatR(Assembly.GetExecutingAssembly());
             //services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             //services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));

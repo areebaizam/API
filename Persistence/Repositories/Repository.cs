@@ -6,7 +6,7 @@ namespace Persistence.Repositories
 {
     public abstract class Repository<TEntity, TEntityId> : IRepository<TEntity, TEntityId>
          where TEntity : Entity<TEntityId>
-         where TEntityId : class
+         where TEntityId : struct
     {
         protected readonly DataContext DbContext;
         protected readonly DbSet<TEntity> DbSet;
@@ -26,7 +26,7 @@ namespace Persistence.Repositories
         //Get by ID
         public virtual async Task<TEntity?> GetAsync(TEntityId id, CancellationToken cancellationToken)
         {
-            return await DbSet.SingleOrDefaultAsync((e => e.Id == id), cancellationToken);
+            return await DbSet.SingleOrDefaultAsync((e => e.Id.Equals(id)), cancellationToken);
         }
 
         public async Task AddAsync(TEntity T)

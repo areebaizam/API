@@ -1,8 +1,9 @@
-﻿using MediatR;
+﻿using Domain.Entities;
+using MediatR;
 
-namespace Application.Features.User
+namespace Application.Features.UserFeatures
 {
     //TODO USE User Response
-    public record GetUsersQuery() : IRequest<IEnumerable<Domain.Entities.User>>;
+    public record GetUsersQuery() : IRequest<IEnumerable<GetUserResponse>>;
 
 }
