@@ -1,4 +1,5 @@
-﻿using Application.IRepositories;
+﻿using Application.Abstractions.Data;
+using Application.Common.Exceptions;
 using AutoMapper;
 using Domain.Entities;
 using MediatR;
@@ -21,7 +22,12 @@ namespace Application.Features.UserFeatures
         public async Task<IEnumerable<GetUserResponse>> Handle(GetUsersQuery request, CancellationToken cancellationToken)
         {
             var users = await _repository
-                .GetAllAsync(cancellationToken);
+                .GetAsync(cancellationToken);
+
+            if (users.Count() == 0)
+            {
+                throw new NoContentException("user");
+            }
 
             return _mapper.Map<List<GetUserResponse>>(users);
         }

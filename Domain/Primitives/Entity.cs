@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Primitives
 {
-    public abstract class Entity<TEntityId> : IEntity where TEntityId : struct
+    public abstract class Entity<TEntityId> : IEntity<TEntityId> where TEntityId : IEntityId
     {
         public TEntityId Id { get; set; }
         //public string EntityName { get; private set; }

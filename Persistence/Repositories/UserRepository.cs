@@ -1,6 +1,6 @@
 ﻿using Domain.Entities;
-using Application.IRepositories;
 using Microsoft.EntityFrameworkCore;
+using Application.Abstractions.Data;
 namespace Persistence.Repositories
 {
     public class UserRepository : Repository<User, UserId>, IUserRepository

@@ -1,4 +1,4 @@
-﻿using Application.IRepositories;
+﻿using Application.Abstractions.Data;
 using Domain.Primitives;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,7 +6,7 @@ namespace Persistence.Repositories
 {
     public abstract class Repository<TEntity, TEntityId> : IRepository<TEntity, TEntityId>
          where TEntity : Entity<TEntityId>
-         where TEntityId : struct
+         where TEntityId : IEntityId
     {
         protected readonly DataContext DbContext;
         protected readonly DbSet<TEntity> DbSet;
@@ -18,13 +18,13 @@ namespace Persistence.Repositories
         }
 
         //Get All
-        public async Task<List<TEntity>> GetAllAsync(CancellationToken cancellationToken)
+        public async Task<List<TEntity>> GetAsync(CancellationToken cancellationToken)
         {
             return await DbSet.ToListAsync(cancellationToken);
         }
 
         //Get by ID
-        public virtual async Task<TEntity?> GetAsync(TEntityId id, CancellationToken cancellationToken)
+        public virtual async Task<TEntity?> GetByIdAsync(TEntityId id, CancellationToken cancellationToken)
         {
             return await DbSet.SingleOrDefaultAsync((e => e.Id.Equals(id)), cancellationToken);
         }

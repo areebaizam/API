@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Domain.Primitives
 {
-    public interface IEntity<TEntityId> where TEntityId : IEntityId
+    public interface IEntityId
     {
+        Guid Value { get; }
     }
 }

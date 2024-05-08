@@ -1,12 +1,8 @@
-﻿using Application.IRepositories;
+﻿using Application.Abstractions.Data;
+using Application.Common.Exceptions;
 using AutoMapper;
 using Domain.Entities;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Features.UserFeatures
 {
@@ -24,10 +20,15 @@ namespace Application.Features.UserFeatures
 
         public async Task<GetUserResponse> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
         {
-            var userId = _mapper.Map<UserId>(request.UserId);
+            var userId = _mapper.Map<UserId>(request);
             var user = await _repository
-                .GetAsync(userId, cancellationToken);
-            
+                .GetByIdAsync(userId, cancellationToken);
+
+            if (user is null)
+            {
+                throw new EntityNotFoundException("user",userId);
+            }
+
             return _mapper.Map<GetUserResponse>(user);
         }
     }

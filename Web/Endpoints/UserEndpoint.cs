@@ -1,4 +1,6 @@
-﻿using Application.Features.UserFeatures;
+﻿using Application.Common.Exceptions;
+using Application.Features.UserFeatures;
+using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Http.HttpResults;
 
@@ -15,23 +17,48 @@ namespace Web.Endpoints
             group.MapPost("", PostByIdAsync).WithName("PostUserById").WithOpenApi();
         }
 
-        static async Task<Results<Ok<IEnumerable<GetUserResponse>>, NoContent>> GetAsync(ISender sender, CancellationToken cancellationToken)
+        static async Task<Results<Ok<IEnumerable<GetUserResponse>>, NotFound<string>>> GetAsync(ISender sender, CancellationToken cancellationToken)
         {
-            var response = await sender.Send(new GetUsersQuery(), cancellationToken);
-            return response.Count() > 0 ? TypedResults.Ok(response) : TypedResults.NoContent();
-        } 
-        
-        static async Task<Results<Ok<GetUserResponse>, NoContent>> GetByIdAsync(Guid id, ISender sender, CancellationToken cancellationToken)
-        {
-            var response = await sender.Send(new GetUserByIdQuery(new GetUserRequest(id)), cancellationToken);
-            return response is GetUserResponse? TypedResults.Ok(response):TypedResults.NoContent();
-        } 
-        
-        static async Task<Results<Ok<GetUserResponse>, NoContent>> PostByIdAsync(GetUserRequest request,ISender sender, CancellationToken cancellationToken)
-        {
-            var response = await sender.Send(new GetUserByIdQuery(request), cancellationToken);
-            return response is GetUserResponse ? TypedResults.Ok(response) : TypedResults.NoContent();
+            try
+            {
+                var response = await sender.Send(new GetUsersQuery(), cancellationToken);
+
+                return TypedResults.Ok(response);
+            }
+
+            catch (NoContentException ex)
+            {
+                return TypedResults.NotFound(ex.Message);
+            }
         }
+
+        static async Task<Results<Ok<GetUserResponse>, NotFound<string>>> GetByIdAsync(Guid id, ISender sender, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var response = await sender.Send(new GetUserByIdQuery(new GetUserRequest(id)), cancellationToken);
+                return TypedResults.Ok(response);
+            }
+            catch (EntityNotFoundException ex)
+            {
+                return TypedResults.NotFound(ex.Message);
+            }
+        }
+
+        static async Task<Results<Ok<GetUserResponse>, NotFound<string>>> PostByIdAsync(GetUserRequest request, ISender sender, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var response = await sender.Send(new GetUserByIdQuery(request), cancellationToken);
+                return TypedResults.Ok(response);
+            }
+            catch (EntityNotFoundException ex)
+            {
+                return TypedResults.NotFound(ex.Message);
+            }
+        }
+    }
+}
 
         
         //static async Task<IResult> GetUserAsync(int id, DataContext db)
@@ -75,5 +102,5 @@ namespace Web.Endpoints
 
         //    return TypedResults.NotFound();
         //}
-    }
-}
+//    }
+//}

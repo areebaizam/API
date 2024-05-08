@@ -1,7 +1,7 @@
 ﻿using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.IRepositories
+namespace Application.Abstractions.Data
 {
     public interface IDataContext
     {

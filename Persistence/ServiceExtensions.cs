@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Persistence.Repositories;
-using Application.IRepositories;
+using Application.Abstractions.Data;
 
 namespace Persistence
 {

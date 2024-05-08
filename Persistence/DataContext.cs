@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Domain.Entities;
-using Application.IRepositories;
+using Application.Abstractions.Data;
 
 namespace Persistence
 {
