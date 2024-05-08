@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Domain.Primitives
+﻿namespace Domain.Primitives
 {
-    public interface IEntityId
+    public interface IEntityId<TIdType>
     {
-        Guid Value { get; }
+        TIdType Value { get;}
+        string ToString();
     }
 }

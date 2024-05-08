@@ -2,9 +2,9 @@
 
 namespace Application.Common.Exceptions
 {
-    public sealed class EntityNotFoundException : Exception
+    public sealed class EntityNotFoundException<TIdType> : Exception
     {
-        public EntityNotFoundException(string entityName, IEntityId id) : base($"The {entityName} with the ID = {id.Value} was not found")
+        public EntityNotFoundException(string entityName, TIdType value) : base($"The {entityName} with the ID = {value} was not found")
         {
 
         }

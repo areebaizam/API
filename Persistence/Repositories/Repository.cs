@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Persistence.Repositories
 {
-    public abstract class Repository<TEntity, TEntityId> : IRepository<TEntity, TEntityId>
-         where TEntity : Entity<TEntityId>
-         where TEntityId : IEntityId
+    public abstract class Repository<TEntity, TId, TIdType> : IRepository<TEntity, TId, TIdType>
+         where TEntity : Entity<TId>
+         where TId : IEntityId<TIdType>
     {
         protected readonly DataContext DbContext;
         protected readonly DbSet<TEntity> DbSet;
@@ -24,7 +24,7 @@ namespace Persistence.Repositories
         }
 
         //Get by ID
-        public virtual async Task<TEntity?> GetByIdAsync(TEntityId id, CancellationToken cancellationToken)
+        public virtual async Task<TEntity?> GetByIdAsync(TId id, CancellationToken cancellationToken)
         {
             return await DbSet.SingleOrDefaultAsync((e => e.Id.Equals(id)), cancellationToken);
         }

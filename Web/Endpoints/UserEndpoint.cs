@@ -1,6 +1,7 @@
 ﻿using Application.Common.Exceptions;
 using Application.Features.UserFeatures;
 using Domain.Entities;
+using Domain.Primitives;
 using MediatR;
 using Microsoft.AspNetCore.Http.HttpResults;
 
@@ -39,7 +40,7 @@ namespace Web.Endpoints
                 var response = await sender.Send(new GetUserByIdQuery(new GetUserRequest(id)), cancellationToken);
                 return TypedResults.Ok(response);
             }
-            catch (EntityNotFoundException ex)
+            catch (EntityNotFoundException<Guid> ex)
             {
                 return TypedResults.NotFound(ex.Message);
             }
@@ -52,7 +53,7 @@ namespace Web.Endpoints
                 var response = await sender.Send(new GetUserByIdQuery(request), cancellationToken);
                 return TypedResults.Ok(response);
             }
-            catch (EntityNotFoundException ex)
+            catch (EntityNotFoundException<Guid> ex)
             {
                 return TypedResults.NotFound(ex.Message);
             }

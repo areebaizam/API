@@ -26,7 +26,7 @@ namespace Application.Features.UserFeatures
 
             if (user is null)
             {
-                throw new EntityNotFoundException("user",userId);
+                throw new EntityNotFoundException<Guid>("user",userId.Value);
             }
 
             return _mapper.Map<GetUserResponse>(user);
