@@ -8,7 +8,7 @@ namespace Persistence.Repositories
          where TEntity : Entity<TId>
          where TId : IEntityId<TIdType>
     {
-        protected readonly DataContext DbContext;
+        public readonly DataContext DbContext;
         protected readonly DbSet<TEntity> DbSet;
 
         public Repository(DataContext dbContext)
@@ -34,14 +34,14 @@ namespace Persistence.Repositories
             await DbSet.AddAsync(T);
         }
 
-        public Task UpdateAsync(TEntity T)
+        public void UpdateAsync(TEntity T)
         {
-            throw new NotImplementedException();
+            DbSet.Update(T);
         }
         
-        public Task DeleteAsync(TEntity T)
+        public void DeleteAsync(TEntity T)
         {
-            throw new NotImplementedException();
+            DbSet.Remove(T);
         }
     }
 }

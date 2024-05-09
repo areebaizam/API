@@ -20,7 +20,7 @@ namespace Application.Features.UserFeatures
 
         public async Task<GetUserResponse> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
         {
-            var userId = _mapper.Map<UserId>(request);
+            var userId = _mapper.Map<UserId>(request.id);
             var user = await _repository
                 .GetByIdAsync(userId, cancellationToken);
 

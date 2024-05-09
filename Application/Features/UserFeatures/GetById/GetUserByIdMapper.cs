@@ -7,13 +7,11 @@ namespace Application.Features.UserFeatures
     {
         public GetUserByIdMapper() {
 
-            CreateMap<GetUserByIdQuery, UserId>()
+            CreateMap<GetUserRequest, UserId>()
                 .ForMember(dest=>dest.Value,
-                opt => opt.MapFrom(src => src.request.UserId));
+                opt => opt.MapFrom(src => src.UserId));
 
-            CreateMap<User, GetUserResponse>()
-                .ForMember(dest => dest.UserId,
-                opt => opt.MapFrom(src => src.Id.Value));
+            CreateMap<User, GetUserResponse>();
         }
     }
 }

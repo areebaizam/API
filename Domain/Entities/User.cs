@@ -8,6 +8,11 @@ namespace Domain.Entities
         {
             Email = email;
             Name = name;
+        }  
+        public User(string email, string name) : base(UserId.New)
+        {
+            Email = email;
+            Name = name;
         }
         public string Email { get; private set; } = string.Empty;
         public string Name { get; private set; } = string.Empty;

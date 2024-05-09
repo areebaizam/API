@@ -2,5 +2,5 @@
 
 namespace Application.Features.UserFeatures
 {
-    public sealed record GetUserByIdQuery(GetUserRequest request) : IRequest<GetUserResponse>;
+    public sealed record GetUserByIdQuery(GetUserRequest id) : IRequest<GetUserResponse>;
 }

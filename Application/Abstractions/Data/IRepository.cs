@@ -8,7 +8,7 @@ namespace Application.Abstractions.Data
         Task<List<TEntity>> GetAsync(CancellationToken cancellationToken);
         Task<TEntity?> GetByIdAsync(TId id, CancellationToken cancellationToken);
         Task AddAsync(TEntity entity);
-        Task UpdateAsync(TEntity entity);
-        Task DeleteAsync(TEntity entity);
+        void UpdateAsync(TEntity entity);
+        void DeleteAsync(TEntity entity);
     }
 }

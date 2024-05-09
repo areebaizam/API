@@ -6,7 +6,7 @@ using MediatR;
 
 namespace Application.Features.UserFeatures
 {
-    internal sealed class GetUsersQueryHandler : IRequestHandler<GetUsersQuery, IEnumerable<GetUserResponse>>
+    internal sealed class GetUsersQueryHandler : IRequestHandler<GetUsersQuery, IEnumerable<GetUsersResponse>>
     {
         //private readonly IDataContext _context;
         private readonly IUserRepository _repository;
@@ -19,7 +19,7 @@ namespace Application.Features.UserFeatures
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<GetUserResponse>> Handle(GetUsersQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<GetUsersResponse>> Handle(GetUsersQuery request, CancellationToken cancellationToken)
         {
             var users = await _repository
                 .GetAsync(cancellationToken);
@@ -29,7 +29,7 @@ namespace Application.Features.UserFeatures
                 throw new NoContentException("user");
             }
 
-            return _mapper.Map<List<GetUserResponse>>(users);
+            return _mapper.Map<List<GetUsersResponse>>(users);
         }
 
         

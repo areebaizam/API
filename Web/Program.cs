@@ -24,6 +24,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.MapUserEndpoints();
+app.UseAppExceptionHandler();
 app.UseCors();
 
 app.Run();

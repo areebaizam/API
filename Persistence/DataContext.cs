@@ -4,7 +4,7 @@ using Application.Abstractions.Data;
 
 namespace Persistence
 {
-    public class DataContext : DbContext, IDataContext
+    public class DataContext : DbContext, IDataContext, IUnitOfWork
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {

@@ -15,6 +15,9 @@ namespace Persistence
 
             services.AddScoped<IDataContext>(sp =>
             sp.GetRequiredService<DataContext>());
+            
+            services.AddScoped<IUnitOfWork>(sp =>
+            sp.GetRequiredService<DataContext>());
 
             services.AddScoped<IUserRepository, UserRepository>();
         }
