@@ -24,7 +24,7 @@ namespace Application.Features.UserFeatures
                 throw new EntityNotFoundException<Guid>("user", request.userId.Value);
             }
 
-            _repository.DeleteAsync(user);
+            _repository.Delete(user);
 
            await _unitOfWork.SaveChangesAsync(cancellationToken);
            return Unit.Value;

@@ -7,10 +7,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public class UserId : EntityId<Guid>
+    public class UserId(Guid value) : EntityId<Guid>(value)
     {
-        public UserId(Guid value):base(value)
-        {
-        }
     }
 }

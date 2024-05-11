@@ -28,12 +28,12 @@ namespace Persistence.Repositories
         public async Task AddAsync(TEntity T, CancellationToken cancellationToken) 
             => await DbSet.AddAsync(T, cancellationToken);
 
-        public void UpdateAsync(TEntity T)
+        public void Update(TEntity T)
         {
             DbSet.Update(T);
         }
         
-        public void DeleteAsync(TEntity T)
+        public void Delete(TEntity T)
         {
             DbSet.Remove(T);
         }

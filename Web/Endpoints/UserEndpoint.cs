@@ -18,6 +18,7 @@ namespace Web.Endpoints
             group.MapGet("{id}", GetByIdAsync).WithName("GetUserById").WithOpenApi();
             group.MapPost("detail", GetDetailByIdAsync).WithName("GetUserDetailById").WithOpenApi();
             group.MapPost("", AddAsync).WithName("AddUser").WithOpenApi();
+            group.MapPut("{id}", UpdateAsync).WithName("UpdateUser").WithOpenApi();
             group.MapDelete("{id}", DeleteAsync).WithName("DeleteUser").WithOpenApi();
         }
 
@@ -79,7 +80,20 @@ namespace Web.Endpoints
         {
             try
             {
-                var response = await sender.Send(new DeleteUserCommand(new UserId(id)), cancellationToken);
+                await sender.Send(new DeleteUserCommand(new UserId(id)), cancellationToken);
+                return TypedResults.NoContent();
+            }
+            catch (EntityNotFoundException<Guid> ex)
+            {
+                return TypedResults.NotFound(ex.Message);
+            }
+        }
+
+        static async Task<Results<NoContent, NotFound<string>>> UpdateAsync(Guid id, UpdateUserRequest request, ISender sender, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var response = await sender.Send(new UpdateUserCommand(new UserId(id),request), cancellationToken);
                 return TypedResults.NoContent();
             }
             catch (EntityNotFoundException<Guid> ex)
