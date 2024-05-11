@@ -22,7 +22,7 @@ namespace Application.Features.UserFeatures
         {
             var user = _mapper.Map<User>(request.user);
 
-            await _repository.AddAsync(user);
+            await _repository.AddAsync(user, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             return _mapper.Map<AddUserResponse>(user.Id);

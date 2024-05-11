@@ -8,12 +8,8 @@ using System.Threading.Tasks;
 
 namespace Domain.Primitives
 {
-    public abstract class Entity<TId> : IEntity
+    public abstract class Entity<TId>(TId id) : IEntity
     {
-        public TId Id { get; set; }
-        public Entity(TId id)
-        {
-            Id = id;
-        }        
+        public TId Id { get; } = id;
     }
 }

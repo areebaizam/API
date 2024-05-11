@@ -4,9 +4,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Persistence.Repositories
 {
-    public abstract class Repository<TEntity, TId, TIdType> : IRepository<TEntity, TId, TIdType>
-         where TEntity : Entity<TId>
-         where TId : IEntityId<TIdType>
+    public abstract class Repository<TEntity, TId> : IRepository<TEntity, TId>
+        where TEntity : Entity<TId>
     {
         public readonly DataContext DbContext;
         protected readonly DbSet<TEntity> DbSet;
@@ -18,21 +17,16 @@ namespace Persistence.Repositories
         }
 
         //Get All
-        public async Task<List<TEntity>> GetAsync(CancellationToken cancellationToken)
-        {
-            return await DbSet.ToListAsync(cancellationToken);
-        }
+        public async Task<List<TEntity>> GetAsync(CancellationToken cancellationToken) 
+            => await DbSet.ToListAsync(cancellationToken);
 
         //Get by ID
-        public virtual async Task<TEntity?> GetByIdAsync(TId id, CancellationToken cancellationToken)
-        {
-            return await DbSet.SingleOrDefaultAsync((e => e.Id.Equals(id)), cancellationToken);
-        }
-
-        public async Task AddAsync(TEntity T)
-        {
-            await DbSet.AddAsync(T);
-        }
+        public virtual async Task<TEntity?> GetByIdAsync(TId id, CancellationToken cancellationToken) 
+            => await DbSet.SingleOrDefaultAsync(e=> e.Id.Equals(id), cancellationToken);
+        
+        //Add Entity
+        public async Task AddAsync(TEntity T, CancellationToken cancellationToken) 
+            => await DbSet.AddAsync(T, cancellationToken);
 
         public void UpdateAsync(TEntity T)
         {

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Application.Abstractions.Data;
 namespace Persistence.Repositories
 {
-    public class UserRepository : Repository<User, UserId, Guid>, IUserRepository
+    public class UserRepository : Repository<User, UserId>, IUserRepository
     {
 
         public UserRepository(DataContext dbContext) : base(dbContext)

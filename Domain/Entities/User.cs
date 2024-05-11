@@ -9,7 +9,7 @@ namespace Domain.Entities
             Email = email;
             Name = name;
         }  
-        public User(string email, string name) : base(UserId.New)
+        public User(string email, string name):base(new UserId(Guid.NewGuid()))
         {
             Email = email;
             Name = name;

@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public readonly record struct UserId(Guid Value) : IEntityId<Guid>
+    public class UserId : EntityId<Guid>
     {
-        public static UserId Empty => new(Guid.Empty);
-        public static UserId New => new(Guid.NewGuid());
-        public override string ToString() => Value.ToString();
+        public UserId(Guid value):base(value)
+        {
+        }
     }
 }

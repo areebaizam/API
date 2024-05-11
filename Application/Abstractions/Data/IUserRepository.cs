@@ -2,7 +2,7 @@
 
 namespace Application.Abstractions.Data
 {
-    public interface IUserRepository : IRepository<User, UserId, Guid>
+    public interface IUserRepository : IRepository<User, UserId>
     {
         public Task<bool> IsEmailUniqueAsync(string email);
     }
