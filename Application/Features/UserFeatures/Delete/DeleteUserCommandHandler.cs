@@ -1,11 +1,13 @@
 ﻿using Application.Abstractions.Data;
+using Application.Abstractions.Dispatcher;
 using Application.Common.Exceptions;
 using Domain.Entities;
+using Domain.Shared;
 using MediatR;
 
 namespace Application.Features.UserFeatures
 {
-    public sealed class DeleteUserCommandHandler : IRequestHandler<DeleteUserCommand,Unit>
+    public sealed class DeleteUserCommandHandler : ICommandHandler<DeleteUserCommand,Unit>
     {
         private readonly IUserRepository _repository;
         private readonly IUnitOfWork _unitOfWork;
@@ -15,13 +17,13 @@ namespace Application.Features.UserFeatures
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Unit> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
+        public async Task<Result<Unit>> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
         {
             var user = await _repository.GetByIdAsync(request.userId,cancellationToken);
 
             if (user is null)
             {
-                throw new EntityNotFoundException<Guid>("user", request.userId.Value);
+                return Result.Failure<Unit>(Error.NotFound("user", request.userId.Value));
             }
 
             _repository.Delete(user);

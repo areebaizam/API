@@ -1,15 +1,14 @@
 ﻿using Application.Common.Exceptions;
 using Application.Features.UserFeatures;
 using Domain.Entities;
-using Domain.Primitives;
 using MediatR;
-using Microsoft.AspNetCore.Http.HttpResults;
+using WebApi.Extensions;
 
 namespace Web.Endpoints
 {
     public static class UserEndpoint
     {
-        private static string _baseUrl = "api/user";
+        private static readonly string _baseUrl = "api/user";
         public static void MapUserEndpoints(this WebApplication app)
         {
             //Base URL
@@ -22,13 +21,13 @@ namespace Web.Endpoints
             group.MapDelete("{id}", DeleteAsync).WithName("DeleteUser").WithOpenApi();
         }
 
-        static async Task<Results<Ok<IEnumerable<GetUsersResponse>>, NotFound<string>>> GetAsync(ISender sender, CancellationToken cancellationToken)
+        static async Task<IResult> GetAsync(ISender sender, CancellationToken cancellationToken)
         {
             try
             {
                 var response = await sender.Send(new GetUsersQuery(), cancellationToken);
 
-                return TypedResults.Ok(response);
+                return BaseEndpoint.ApiGo(response); ;
             }
 
             catch (NoContentException ex)
@@ -37,38 +36,12 @@ namespace Web.Endpoints
             }
         }
 
-        static async Task<Results<Ok<GetUserResponse>, NotFound<string>>> GetByIdAsync(Guid id, ISender sender, CancellationToken cancellationToken)
-        {
-            try
-            {
-                var response = await sender.Send(new GetUserByIdQuery(new GetUserRequest(id)), cancellationToken);
-                return TypedResults.Ok(response);
-            }
-            catch (EntityNotFoundException<Guid> ex)
-            {
-                return TypedResults.NotFound(ex.Message);
-            }
-        }
-
-        static async Task<Results<Ok<GetUserResponse>, NotFound<string>>> GetDetailByIdAsync(GetUserRequest request, ISender sender, CancellationToken cancellationToken)
-        {
-            try
-            {
-                var response = await sender.Send(new GetUserByIdQuery(request), cancellationToken);
-                return TypedResults.Ok(response);
-            }
-            catch (EntityNotFoundException<Guid> ex)
-            {
-                return TypedResults.NotFound(ex.Message);
-            }
-        }
-        static async Task<Results<Created<AddUserResponse>, BadRequest<string>>> AddAsync(AddUserRequest request, ISender sender, CancellationToken cancellationToken)
+        static async Task<IResult> GetByIdAsync(Guid id, ISender sender, CancellationToken cancellationToken)
         {
             //try
             //{
-                var response = await sender.Send(new AddUserCommand(request), cancellationToken);
-                var locationUri =$"{_baseUrl}/{response.UserId}";
-                return TypedResults.Created(locationUri, response);
+                var response = await sender.Send(new GetUserByIdQuery(new GetUserRequest(id)), cancellationToken);
+                return BaseEndpoint.ApiGo(response);
             //}
             //catch (EntityNotFoundException<Guid> ex)
             //{
@@ -76,30 +49,47 @@ namespace Web.Endpoints
             //}
         }
 
-        static async Task<Results<NoContent, NotFound<string>>> DeleteAsync(Guid id, ISender sender, CancellationToken cancellationToken)
+        static async Task<IResult> GetDetailByIdAsync(GetUserRequest request, ISender sender, CancellationToken cancellationToken)
         {
-            try
-            {
-                await sender.Send(new DeleteUserCommand(new UserId(id)), cancellationToken);
-                return TypedResults.NoContent();
-            }
-            catch (EntityNotFoundException<Guid> ex)
-            {
-                return TypedResults.NotFound(ex.Message);
-            }
+            //try
+            //{
+                var response = await sender.Send(new GetUserByIdQuery(request), cancellationToken);
+                return BaseEndpoint.ApiGo(response);
+            //}
+            //catch (EntityNotFoundException<Guid> ex)
+            //{
+            //    return TypedResults.NotFound(ex.Message);
+            //}
+        }
+        static async Task<IResult> AddAsync(AddUserRequest request, ISender sender, CancellationToken cancellationToken)
+        {
+            var response = await sender.Send(new AddUserCommand(request), cancellationToken);
+            return BaseEndpoint.ApiGo(response);
+        }
+        static async Task<IResult> DeleteAsync(Guid id, ISender sender, CancellationToken cancellationToken)
+        {
+            //try
+            //{
+                var response = await sender.Send(new DeleteUserCommand(new UserId(id)), cancellationToken);
+                return BaseEndpoint.ApiGo(response);
+            //}
+            //catch (EntityNotFoundException<Guid> ex)
+            //{
+            //    return TypedResults.NotFound(ex.Message);
+            //}
         }
 
-        static async Task<Results<NoContent, NotFound<string>>> UpdateAsync(Guid id, UpdateUserRequest request, ISender sender, CancellationToken cancellationToken)
+        static async Task<IResult> UpdateAsync(Guid id, UpdateUserRequest request, ISender sender, CancellationToken cancellationToken)
         {
-            try
-            {
+            //try
+            //{
                 var response = await sender.Send(new UpdateUserCommand(new UserId(id),request), cancellationToken);
-                return TypedResults.NoContent();
-            }
-            catch (EntityNotFoundException<Guid> ex)
-            {
-                return TypedResults.NotFound(ex.Message);
-            }
+                return BaseEndpoint.ApiGo(response);
+            //}
+            //catch (EntityNotFoundException<Guid> ex)
+            //{
+            //    return TypedResults.NotFound(ex.Message);
+            //}
         }
     }
 }

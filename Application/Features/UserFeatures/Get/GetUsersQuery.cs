@@ -1,7 +1,7 @@
-﻿using MediatR;
+﻿using Application.Abstractions.Dispatcher;
 
 namespace Application.Features.UserFeatures
 {
-    public record GetUsersQuery() : IRequest<IEnumerable<GetUsersResponse>>;
+    public record GetUsersQuery() : IQuery<IEnumerable<GetUsersResponse>>;
 
 }

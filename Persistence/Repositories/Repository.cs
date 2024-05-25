@@ -4,17 +4,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Persistence.Repositories
 {
-    public abstract class Repository<TEntity, TId> : IRepository<TEntity, TId>
+    public abstract class Repository<TEntity, TId>(DataContext dbContext) : IRepository<TEntity, TId>
         where TEntity : Entity<TId>
     {
-        public readonly DataContext DbContext;
-        protected readonly DbSet<TEntity> DbSet;
-
-        public Repository(DataContext dbContext)
-        {
-            DbContext = dbContext;
-            DbSet = dbContext.Set<TEntity>();
-        }
+        public readonly DataContext DbContext = dbContext;
+        protected readonly DbSet<TEntity> DbSet = dbContext.Set<TEntity>();
 
         //Get All
         public async Task<List<TEntity>> GetAsync(CancellationToken cancellationToken) 

@@ -1,6 +1,6 @@
-﻿using MediatR;
+﻿using Application.Abstractions.Dispatcher;
 
 namespace Application.Features.UserFeatures
 {
-    public sealed record GetUserByIdQuery(GetUserRequest id) : IRequest<GetUserResponse>;
+    public sealed record GetUserByIdQuery(GetUserRequest Id) : IQuery<GetUserResponse>;
 }

@@ -4,7 +4,7 @@
     {
         public NoContentException(string entityName) : base($"No { entityName } data found")
         {
-            
+            ////TODO Remove this
         }
     }
 }

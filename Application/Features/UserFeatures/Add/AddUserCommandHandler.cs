@@ -1,11 +1,12 @@
 ﻿using Application.Abstractions.Data;
+using Application.Abstractions.Dispatcher;
 using AutoMapper;
 using Domain.Entities;
-using MediatR;
+using Domain.Shared;
 
 namespace Application.Features.UserFeatures
 {
-    public sealed class AddUserCommandHandler : IRequestHandler<AddUserCommand,AddUserResponse>
+    public sealed class AddUserCommandHandler : ICommandHandler<AddUserCommand,AddUserResponse>
     {
         private readonly IUserRepository _repository;
         private readonly IUnitOfWork _unitOfWork;
@@ -18,9 +19,9 @@ namespace Application.Features.UserFeatures
             _mapper = mapper;
         }
 
-        public async Task<AddUserResponse> Handle(AddUserCommand request, CancellationToken cancellationToken)
+        public async Task<Result<AddUserResponse>> Handle(AddUserCommand request, CancellationToken cancellationToken)
         {
-            var user = _mapper.Map<User>(request.user);
+            var user = _mapper.Map<User>(request.User);
 
             await _repository.AddAsync(user, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);

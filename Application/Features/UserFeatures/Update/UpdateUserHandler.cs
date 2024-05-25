@@ -1,13 +1,15 @@
 ﻿using Application.Abstractions.Data;
+using Application.Abstractions.Dispatcher;
 using Application.Common.Exceptions;
 using AutoMapper;
 using Domain.Entities;
+using Domain.Shared;
 using MediatR;
 
 namespace Application.Features.UserFeatures
 {
 
-    public sealed class UpdateUserHandler : IRequestHandler<UpdateUserCommand, Unit>
+    public sealed class UpdateUserHandler : ICommandHandler<UpdateUserCommand, Unit>
     {
         private readonly IUserRepository _repository;
         private readonly IUnitOfWork _unitOfWork;
@@ -19,12 +21,13 @@ namespace Application.Features.UserFeatures
             _mapper = mapper;
         }
 
-        public async Task<Unit> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
+        public async Task<Result<Unit>> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
         {
+            //TODO Move this code to common method
             var user = await _repository.GetByIdAsync(request.Id, cancellationToken);
             if (user == null)
             {
-                throw new EntityNotFoundException<Guid>("user", request.Id.Value);
+                return Result.Failure<Unit>(Error.NotFound("user", request.Id.Value));
             }
 
             var updatedUser = new User(request.Id, 

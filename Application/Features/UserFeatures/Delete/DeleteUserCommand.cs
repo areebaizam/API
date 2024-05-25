@@ -1,12 +1,8 @@
-﻿using Domain.Entities;
+﻿using Application.Abstractions.Dispatcher;
+using Domain.Entities;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Features.UserFeatures
 {
-    public record DeleteUserCommand(UserId userId) : IRequest<Unit>;
+    public record DeleteUserCommand(UserId userId) : ICommand<Unit>;
 }
