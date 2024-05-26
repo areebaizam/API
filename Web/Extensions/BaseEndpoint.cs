@@ -1,37 +1,35 @@
-﻿using Azure.Core;
-using Azure;
-using Domain.Shared;
-using System.Net;
-using Application.Features.UserFeatures;
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Microsoft.AspNetCore.Http;
+﻿using Domain.Shared;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace WebApi.Extensions
 {
     public static class BaseEndpoint
     {
-        //public static IResult ApiGo<TResult>(Result<TResult> result) =>
+        public static readonly string _baseUrl = "api/";
+        public static Results<Ok<OkResponse>,BadRequest<ErrorResponse>> ApiGo(Result result) {
+            if (result.IsSuccess)
+                return ApiOk();
+            else return ApiError(result);
+        }
+        private static Ok<OkResponse> ApiOk()
+        {
+            var apiResponse = new OkResponse();
+            return TypedResults.Ok(apiResponse);
+        }
 
-        //    result switch
-        //    {
-
-        //        ValidationResult<TResult> validationResult => TypedResults.BadRequest(validationResult.Errors),
-        //        _ => result.IsSuccess
-        //               ? TypedResults.Ok(result.Value)
-        //               : TypedResults.BadRequest(result.Error)
-        //    };
-
-
-        //return result.IsSuccess
-        //    ? TypedResults.Ok(result.Value)
-        //    : TypedResults.BadRequest(result.Error);
+        private static BadRequest<ErrorResponse> ApiError(Result result) =>
+            result switch
+            {
+                { IsSuccess: true } => throw new InvalidOperationException(),
+                ValidationResult validationResult => TypedResults.BadRequest(new ErrorResponse(validationResult.Error)),
+                Result errorResult => TypedResults.BadRequest(new ErrorResponse(errorResult.Error)),
+                _ => TypedResults.BadRequest(new ErrorResponse(result.Error))
+            };
 
         public static IResult ApiGo<TResult>(Result<TResult> result) {
             if (result.IsSuccess)
                 return ApiOk(result);
             else return ApiError(result);
-                //ypedResults.BadRequest(new ErrorResponse<AddUserResponse>(response))
         }
 
         private static Ok<OkResponse<TResult>> ApiOk<TResult>(Result<TResult> result)
@@ -48,12 +46,6 @@ namespace WebApi.Extensions
                 Result<TResult> errorResult => TypedResults.BadRequest(new ErrorResponse(errorResult.Error)),
                 _ => TypedResults.BadRequest(result.Error)
             };
-        //{
-        //    var apiResponse = new OkResponse<TResult>(result);
-        //    return TypedResults.Ok((apiResponse));
-        //}
-
-
     }
             
             

@@ -1,14 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Domain.Entities;
 using Application.Abstractions.Data;
+using Domain.Entities;
 
 namespace Persistence
 {
-    public class DataContext : DbContext, IDataContext, IUnitOfWork
+    public class DataContext(DbContextOptions<DataContext> options) : DbContext(options), IDataContext, IUnitOfWork
     {
-        public DataContext(DbContextOptions<DataContext> options) : base(options)
-        {
-        }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>().ToTable("Users");

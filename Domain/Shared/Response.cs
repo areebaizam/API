@@ -1,40 +1,26 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Net;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-
-namespace Domain.Shared
+﻿namespace Domain.Shared
 {
-    public abstract class Response {
-        public virtual ResponseStatus Status { get; set; } = new ResponseStatus();
-
-        public virtual object? Result { get; set; } = default;
+    public abstract class Response(bool isSuccess) {
+        public virtual ResponseStatus Status { get; set; } = new ResponseStatus(isSuccess);
+        public virtual object Result { get; set; } = new object();
         public virtual Error[] Errors { get; set; } = [];
     }
 
-    //public class ApiGo<TResponse>
-    //{
-    //    public  ApiGo(Result<TResponse> response)
-    //    {
-           
-    //            if (response.IsSuccess)
-    //            return new OkResponse<TResponse>(response);
-    //        else return new ErrorResponse<TResponse>(response);
-            
-    //    }
-    //}
+        public class OkResponse : Response
+    {
+        public OkResponse() : base(true)
+        {
+        }
+    }
     public class OkResponse<TResponse> : Response
     {
-        public OkResponse(Result<TResponse> response)
-        {
-            Result = response.Value;
-        }
+        public OkResponse(Result<TResponse> response) : base(true) => Result = response.Value!;
     }
 
     public class ErrorResponse : Response 
     {
-        public ErrorResponse(Error error)
+        public ErrorResponse(Error error) : base(false)
         {
-            Status.IsSuccess = false;
             Status.Message = error.Message;
             Status.StatusCode = error.Code;
         }
@@ -43,7 +29,7 @@ namespace Domain.Shared
 
     public class ErrorResponse<TResult> : Response
     {
-        public ErrorResponse(ValidationResult<TResult> result)
+        public ErrorResponse(ValidationResult<TResult> result) : base(false)
         {
             Errors = result.Errors;
             Status.IsSuccess = false;
@@ -52,19 +38,11 @@ namespace Domain.Shared
         }
     }
 
-    public class ResponseStatus
+    public class ResponseStatus(bool isSuccess)
     {
-        public ResponseStatus()
-        {
-            StatusCode = "Success";
-            Message = "Ok";
-            IsSuccess = true;
-            TimeStamp = DateTime.UtcNow;//TODO Make it by default to UTC do not declare everytime
-        }
-
-        public bool IsSuccess { get; set; }
-        public string Message { get; set; }
-        public string StatusCode { get; set; }
-        public DateTime TimeStamp { get; set; }
+        public bool IsSuccess { get; set; } = isSuccess;
+        public string Message { get; set; } = "Ok";
+        public string StatusCode { get; set; } = "Success";
+        public DateTime TimeStamp { get; set; } = DateTime.UtcNow;//TODO Make it by default to UTC do not declare everytime
     }
 }

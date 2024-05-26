@@ -1,10 +1,6 @@
-﻿using Application.Common.Exceptions;
-using Microsoft.AspNetCore.Diagnostics;
+﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Net;
-using System.Text.Json;
-
+//TODO Remove MVC and make standard response
 namespace WebApi.Extensions
 {
     public static class ExceptionHandler
@@ -22,7 +18,7 @@ namespace WebApi.Extensions
                     context.Response.ContentType = "application/json";
                     //_logger.LogError(exception, "Exception occurred: {Message}", exception.Message);
                     var exceptionDetails = GetExceptionDetails(contextFeature.Error);
-
+                    //TODO return Exception in standard format
                     var problemDetails = new ProblemDetails
                     {
                         Status = exceptionDetails.Status,
@@ -39,34 +35,6 @@ namespace WebApi.Extensions
                     context.Response.StatusCode = exceptionDetails.Status;
 
                     await context.Response.WriteAsJsonAsync(problemDetails);
-
-                    //context.Response.StatusCode = contextFeature.Error switch
-                    //{
-                    //    ValidationFailedException => StatusCodes.Status400BadRequest,
-                    //    OperationCanceledException => StatusCodes.Status503ServiceUnavailable,
-                    //    //NotFoundException => (int)HttpStatusCode.NotFound,
-                    //    _ => StatusCodes.Status500InternalServerError
-                    //};
-
-                    //var problemDetails = new ProblemDetails
-                    //{
-                    //    Status = context.Response.StatusCode,
-                    //    Title = contextFeature.Error.GetBaseException().Message,
-                    //    Detail = contextFeature.Error.StackTrace
-                    //};
-                    //context.Response.WriteAsJsonAsync(new
-                    //{
-                    //    statusCode = context.Response.StatusCode,
-                    //    message = contextFeature.Error.GetBaseException().Message
-                    //});
-
-                    //var errorResponse = new
-                    //{
-                    //    statusCode = context.Response.StatusCode,
-                    //    message = contextFeature.Error.GetBaseException().Message
-                    //};
-
-                    //await context.Response.WriteAsync(JsonSerializer.Serialize(errorResponse));
                 });
             });
         }
@@ -75,12 +43,6 @@ namespace WebApi.Extensions
         {
             return exception switch
             {
-                ValidationFailedException validationException => new ExceptionDetails(
-                    StatusCodes.Status400BadRequest,
-                    "ValidationFailure",
-                    "Validation error",
-                    "One or more validation errors has occurred",
-                    validationException.Errors),
                 OperationCanceledException => new ExceptionDetails(
                     StatusCodes.Status503ServiceUnavailable,
                     "ServiceUnavailable",

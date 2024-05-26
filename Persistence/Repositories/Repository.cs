@@ -1,6 +1,6 @@
-﻿using Application.Abstractions.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using Application.Abstractions.Data;
 using Domain.Primitives;
-using Microsoft.EntityFrameworkCore;
 
 namespace Persistence.Repositories
 {
@@ -11,12 +11,12 @@ namespace Persistence.Repositories
         protected readonly DbSet<TEntity> DbSet = dbContext.Set<TEntity>();
 
         //Get All
-        public async Task<List<TEntity>> GetAsync(CancellationToken cancellationToken) 
+        public async Task<List<TEntity>?> GetAsync(CancellationToken cancellationToken) 
             => await DbSet.ToListAsync(cancellationToken);
 
         //Get by ID
         public virtual async Task<TEntity?> GetByIdAsync(TId id, CancellationToken cancellationToken) 
-            => await DbSet.SingleOrDefaultAsync(e=> e.Id.Equals(id), cancellationToken);
+            => await DbSet.SingleOrDefaultAsync(e => e.Id.Equals(id), cancellationToken);
         
         //Add Entity
         public async Task AddAsync(TEntity T, CancellationToken cancellationToken) 

@@ -1,6 +1,6 @@
 ﻿namespace Domain.Shared
 {
-    public class ValidationResult(Error[] errors) : Result(false, Error.Validation())
+    public class ValidationResult(Error[] errors) : Result(false,Error.Validation())
     {
         public Error[] Errors { get; } = errors;
 
@@ -8,7 +8,7 @@
     }
     public sealed class ValidationResult<TValue> : Result<TValue>
     {
-        private ValidationResult(Error[] errors) : base(default,false, Error.Validation()) =>
+        private ValidationResult(Error[] errors) : base(default,false,Error.Validation()) =>
         Errors = errors;
 
         public Error[] Errors { get; }

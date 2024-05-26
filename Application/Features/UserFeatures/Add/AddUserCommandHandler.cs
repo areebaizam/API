@@ -6,18 +6,12 @@ using Domain.Shared;
 
 namespace Application.Features.UserFeatures
 {
-    public sealed class AddUserCommandHandler : ICommandHandler<AddUserCommand,AddUserResponse>
+    public sealed record AddUserCommand(AddUserRequest User) : ICommand<AddUserResponse>;
+    public sealed class AddUserCommandHandler(IUserRepository repository, IUnitOfWork unitOfWork, IMapper mapper) : ICommandHandler<AddUserCommand,AddUserResponse>
     {
-        private readonly IUserRepository _repository;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
-
-        public AddUserCommandHandler(IUserRepository repository, IUnitOfWork unitOfWork, IMapper mapper)
-        {
-            _repository = repository;
-            _unitOfWork = unitOfWork;
-            _mapper = mapper;
-        }
+        private readonly IUserRepository _repository = repository;
+        private readonly IUnitOfWork _unitOfWork = unitOfWork;
+        private readonly IMapper _mapper = mapper;
 
         public async Task<Result<AddUserResponse>> Handle(AddUserCommand request, CancellationToken cancellationToken)
         {

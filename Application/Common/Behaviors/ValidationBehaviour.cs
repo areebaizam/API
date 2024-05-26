@@ -1,5 +1,4 @@
-﻿using Application.Common.Exceptions;
-using Domain.Shared;
+﻿using Domain.Shared;
 using FluentValidation;
 using MediatR;
 
@@ -14,11 +13,6 @@ namespace Application.Common.Behaviors
 
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
-            // Validate
-            //var context = new ValidationContext<TRequest>(request);
-
-            //var validationFailures = await Task.WhenAll(
-            //    _validators.Select(validator => validator.ValidateAsync(context)));
             if (!_validators.Any())
             {
                 return await next();
