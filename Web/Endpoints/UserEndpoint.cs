@@ -44,7 +44,7 @@ namespace Web.Endpoints
             var response = await sender.Send(new AddUserCommand(request), cancellationToken);
             return BaseEndpoint.ApiGo(response);
         }
-        static async Task<Results<Ok<OkResponse>,BadRequest<ErrorResponse>>> DeleteAsync(Guid id, ISender sender, CancellationToken cancellationToken)
+        static async Task<IResult> DeleteAsync(Guid id, ISender sender, CancellationToken cancellationToken)
         {
             var response = await sender.Send(new DeleteUserCommand(new UserId(id)), cancellationToken);
             return BaseEndpoint.ApiGo(response);

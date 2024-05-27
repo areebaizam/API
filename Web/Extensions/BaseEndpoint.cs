@@ -6,7 +6,7 @@ namespace WebApi.Extensions
     public static class BaseEndpoint
     {
         public static readonly string _baseUrl = "api/";
-        public static Results<Ok<OkResponse>,BadRequest<ErrorResponse>> ApiGo(Result result) {
+        public static IResult ApiGo(Result result) {
             if (result.IsSuccess)
                 return ApiOk();
             else return ApiError(result);
@@ -21,7 +21,7 @@ namespace WebApi.Extensions
             result switch
             {
                 { IsSuccess: true } => throw new InvalidOperationException(),
-                ValidationResult validationResult => TypedResults.BadRequest(new ErrorResponse(validationResult.Error)),
+                ValidationResult validationResult => TypedResults.BadRequest(new ErrorResponse(validationResult)),
                 Result errorResult => TypedResults.BadRequest(new ErrorResponse(errorResult.Error)),
                 _ => TypedResults.BadRequest(new ErrorResponse(result.Error))
             };
@@ -43,7 +43,7 @@ namespace WebApi.Extensions
             {
                 { IsSuccess: true } => throw new InvalidOperationException(),
                 ValidationResult<TResult> validationResult => TypedResults.BadRequest(new ErrorResponse<TResult>(validationResult)),
-                Result<TResult> errorResult => TypedResults.BadRequest(new ErrorResponse(errorResult.Error)),
+                Result<TResult> => TypedResults.BadRequest(new ErrorResponse<TResult>(result)),
                 _ => TypedResults.BadRequest(result.Error)
             };
     }
