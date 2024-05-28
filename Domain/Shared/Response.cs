@@ -1,64 +1,17 @@
-﻿using System.ComponentModel.DataAnnotations;
-using static System.Net.Mime.MediaTypeNames;
-
-namespace Domain.Shared
+﻿namespace Domain.Shared
 {
-    public abstract class Response(bool isSuccess)
+    public class Response<TResult>(bool isSuccess, TResult? result, Error[] errors)
     {
         public virtual ResponseStatus Status { get; set; } = new ResponseStatus(isSuccess);
-        public virtual Error[] Errors { get; set; } = [];
-    }
-
-    public abstract class Response<TResponse>(bool isSuccess, TResponse? result): Response(isSuccess) {
-        public TResponse Next { get;} = result;
-    }
-
-    public class OkResponse : Response
-    {
-        public OkResponse() : base(true)
-        {
-        }
-    }
-    public class OkResponse<TResponse>(Result<TResponse> response) : Response<TResponse>(true, response.Value)
-    {
-    }
-
-    public class ErrorResponse<TResponse> : Response<TResponse>
-    {
-        public ErrorResponse(ValidationResult<TResponse> result) : base(false, default)
-        {
-            Errors = result.Errors;
-            Status.Message = result.Error.Message;
-            Status.StatusCode = result.Error.Code;
-        } 
-        public ErrorResponse(Result<TResponse> result) : base(false, default)
-        {
-            Status.IsSuccess = false;
-            Status.Message = result.Error.Message;
-            Status.StatusCode = result.Error.Code;
-        }        
-    }
-    public class ErrorResponse: Response
-    {
-        public ErrorResponse(ValidationResult result) : base(false)
-        {
-            Errors = result.Errors;
-            Status.Message = result.Error.Message;
-            Status.StatusCode = result.Error.Code;
-        }
-        public ErrorResponse(Error error) : base(false)
-        {
-            Status.Message = error.Message;
-            Status.StatusCode = error.Code;
-        }
-        
+        public virtual TResult? Next { get; } = result;
+        public virtual Error[] Errors { get; set; } = errors;
     }
 
     public class ResponseStatus(bool isSuccess)
     {
         public bool IsSuccess { get; set; } = isSuccess;
         public string Message { get; set; } = "Ok";
-        public string StatusCode { get; set; } = "Success";
+        public string Code { get; set; } = "Success";
         public DateTime TimeStamp { get; set; } = DateTime.UtcNow;//TODO Make it by default to UTC do not declare everytime
     }
 }

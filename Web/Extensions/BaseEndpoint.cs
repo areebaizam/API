@@ -8,47 +8,33 @@ namespace WebApi.Extensions
         public static readonly string _baseUrl = "api/";
         public static IResult ApiGo(Result result) {
             if (result.IsSuccess)
-                return ApiOk();
+                return TypedResults.Ok(ResponseExt.Ok());
+            else return ApiError(result);
+        
+        }
+        public static IResult ApiGo<TResult>(Result<TResult> result) {
+            if (result.IsSuccess)
+                return TypedResults.Ok(ResponseExt.Ok(result));
             else return ApiError(result);
         }
-        private static Ok<OkResponse> ApiOk()
-        {
-            var apiResponse = new OkResponse();
-            return TypedResults.Ok(apiResponse);
-        }
 
-        private static BadRequest<ErrorResponse> ApiError(Result result) =>
+        private static BadRequest<Response<object>> ApiError(Result result) =>
             result switch
             {
                 { IsSuccess: true } => throw new InvalidOperationException(),
-                ValidationResult validationResult => TypedResults.BadRequest(new ErrorResponse(validationResult)),
-                Result errorResult => TypedResults.BadRequest(new ErrorResponse(errorResult.Error)),
-                _ => TypedResults.BadRequest(new ErrorResponse(result.Error))
+                _ => TypedResults.BadRequest(ResponseExt.Failure(result.Error))
             };
 
-        public static IResult ApiGo<TResult>(Result<TResult> result) {
-            if (result.IsSuccess)
-                return ApiOk(result);
-            else return ApiError(result);
-        }
-
-        private static Ok<OkResponse<TResult>> ApiOk<TResult>(Result<TResult> result)
-        {
-            var apiResponse = new OkResponse<TResult>(result);
-            return TypedResults.Ok((apiResponse));
-        }
-        
         private static IResult ApiError<TResult>(Result<TResult> result) =>
             result switch
             {
                 { IsSuccess: true } => throw new InvalidOperationException(),
-                ValidationResult<TResult> validationResult => TypedResults.BadRequest(new ErrorResponse<TResult>(validationResult)),
-                Result<TResult> => TypedResults.BadRequest(new ErrorResponse<TResult>(result)),
-                _ => TypedResults.BadRequest(result.Error)
+                ValidationResult<TResult> validationResult => TypedResults.BadRequest(ResponseExt.Failure(validationResult)),
+                _ => TypedResults.BadRequest(ResponseExt.Failure(result.Error))
             };
     }
-            
-            
-            
-    
+
+
+
+
 }
