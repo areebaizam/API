@@ -1,9 +1,9 @@
 ﻿namespace Domain.Shared
 {
-    public class Response<TResult>(bool isSuccess, TResult? result, Error[] errors)
+    public class Response(bool isSuccess, object? result, Error[] errors)
     {
         public virtual ResponseStatus Status { get; set; } = new ResponseStatus(isSuccess);
-        public virtual TResult? Next { get; } = result;
+        public virtual object? Next { get; } = result;
         public virtual Error[] Errors { get; set; } = errors;
     }
 

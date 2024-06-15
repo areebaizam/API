@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Primitives
+namespace Application.Features.Authentication.Login
 {
-    public interface IEntity<TId>
+    internal class LoginCommandValidator
     {
-        TId Id { get;}
     }
 }

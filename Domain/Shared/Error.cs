@@ -19,6 +19,8 @@
             new(ErrorType.NotFound, $"No {entity} data found");
         public static Error Validation() =>
             new(ErrorType.Validation, "Validation Error Occured");
+        public static Error Credentials() =>
+            new(ErrorType.InvalidCredentials, "Invalid username or password");
         public static Error Conflict(string entity, object key) =>
             new(ErrorType.Validation, $"The {entity} with id {key} already exists.");
         public static Error Failure(string propertyName, string errorMessage) =>
@@ -31,6 +33,7 @@
         public const string NullValue = nameof(NullValue);
         public const string NotFound = nameof(NotFound);
         public const string Validation = nameof(Validation);
+        public const string InvalidCredentials = nameof(InvalidCredentials);
         public const string Conflict = nameof(Conflict);
         public const string Failure = nameof(Failure);
     }

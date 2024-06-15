@@ -6,6 +6,7 @@ namespace Persistence.Repositories
 {
     public abstract class Repository<TEntity, TId>(DataContext dbContext) : IRepository<TEntity, TId>
         where TEntity : Entity<TId>
+        where TId : notnull
     {
         public readonly DataContext DbContext = dbContext;
         protected readonly DbSet<TEntity> DbSet = dbContext.Set<TEntity>();
@@ -15,8 +16,10 @@ namespace Persistence.Repositories
             => await DbSet.ToListAsync(cancellationToken);
 
         //Get by ID
-        public virtual async Task<TEntity?> GetByIdAsync(TId id, CancellationToken cancellationToken) 
-            => await DbSet.SingleOrDefaultAsync(e => e.Id.Equals(id), cancellationToken);
+        public virtual async Task<Maybe<TEntity>> GetByIdAsync(TId id, CancellationToken cancellationToken)
+        {
+            return await DbSet.SingleOrDefaultAsync(e => e.Id.Equals(id), cancellationToken);
+        }
         
         //Add Entity
         public async Task AddAsync(TEntity T, CancellationToken cancellationToken) 

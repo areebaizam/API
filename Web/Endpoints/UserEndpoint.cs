@@ -20,6 +20,7 @@ namespace Web.Endpoints
             group.MapPost("", AddAsync).WithName("AddUser").WithOpenApi();
             group.MapPut("{id}", UpdateAsync).WithName("UpdateUser").WithOpenApi();
             group.MapDelete("{id}", DeleteAsync).WithName("DeleteUser").WithOpenApi();
+            group.RequireAuthorization();
         }
 
         static async Task<IResult> GetAsync(ISender sender, CancellationToken cancellationToken)

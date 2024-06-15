@@ -1,6 +1,7 @@
 ﻿using Application.Abstractions.Data;
 using Application.Abstractions.Dispatcher;
 using Domain.Entities;
+using Domain.Primitives;
 using Domain.Shared;
 
 namespace Application.Features.UserFeatures
@@ -15,15 +16,15 @@ namespace Application.Features.UserFeatures
         public async Task<Result> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
         {
             //TODO Move this code to common method
-            var user = await _repository.GetByIdAsync(request.Id, cancellationToken);
-            if (user == null)
+            Maybe<User> user = await _repository.GetByIdAsync(request.Id, cancellationToken);
+            if (!user.HasValue)
             {
                 return Error.NotFound("user", request.Id.Value);
             }
 
             var updatedUser = new User(request.Id, 
-                string.IsNullOrWhiteSpace(request.User.Email)? user.Email : request.User.Email,
-                string.IsNullOrWhiteSpace(request.User.Name) ? user.Name : request.User.Name);
+                string.IsNullOrWhiteSpace(request.User.Email)? user.Value.Email : request.User.Email,
+                string.IsNullOrWhiteSpace(request.User.Name) ? user.Value.Name : request.User.Name);
 
             _repository.Update(updatedUser);
             await _unitOfWork.SaveChangesAsync(cancellationToken);

@@ -8,6 +8,8 @@ namespace Application.Features.UserFeatures
         {
             RuleFor(c => c.User.Email).NotEmpty().NotNull()
                 .WithMessage("Email is required");
+            RuleFor(c => c.User.Email).EmailAddress()
+                .WithMessage("Email is invalid");
         }
 
     }

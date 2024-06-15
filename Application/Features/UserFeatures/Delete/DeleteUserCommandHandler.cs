@@ -1,6 +1,7 @@
 ﻿using Application.Abstractions.Data;
 using Application.Abstractions.Dispatcher;
 using Domain.Entities;
+using Domain.Primitives;
 using Domain.Shared;
 
 namespace Application.Features.UserFeatures
@@ -13,14 +14,14 @@ namespace Application.Features.UserFeatures
 
         public async Task<Result> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
         {
-            var user = await _repository.GetByIdAsync(request.UserId,cancellationToken);
+            Maybe<User> user = await _repository.GetByIdAsync(request.UserId,cancellationToken);
 
-            if (user is null)
+            if (!user.HasValue)
             {
                 return Error.NotFound("user", request.UserId.Value);
             }
 
-            _repository.Delete(user);
+            _repository.Delete(user.Value);
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
